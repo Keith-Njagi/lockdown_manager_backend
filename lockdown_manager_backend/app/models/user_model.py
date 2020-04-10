@@ -12,7 +12,7 @@ class User(db.Model):
     phone = db.Column(db.Integer,  unique=True, nullable=False)
     id_no = db.Column(db.Integer,  unique=True, nullable=False)
     password = db.Column(db.String(80), nullable=False)
-
+    
     is_suspended = db.Column(db.Integer, default=0)
 
     created = db.Column(db.DateTime, default=datetime.utcnow(), nullable=False)
