@@ -7,7 +7,7 @@ from . import db, ma
 class User(db.Model):
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True)
-    email = db.Column(db.String(50), unique=True, nullable=False)
+    email = db.Column(db.String(50), unique=True, nullable=True)
     full_name = db.Column(db.String(25), nullable=False)
     phone = db.Column(db.Integer,  unique=True, nullable=False)
     id_no = db.Column(db.Integer,  unique=True, nullable=False)
