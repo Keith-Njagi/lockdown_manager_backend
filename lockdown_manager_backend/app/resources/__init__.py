@@ -3,9 +3,12 @@ from flask_restx import Api
 from flask_jwt_extended import JWTManager
 
 from blacklist import BLACKLIST
-# from .user_signup import api as register_user
-# from .user_login import api as login_user
-# from .user_change_password import api as change_password
+from .signup import api as signup
+from .login import api as login
+from .logout import api as logout
+from .manage import api as manage
+from .password_manager import api as password, mail
+from .update import api as update
 
 
 jwt = JWTManager()
@@ -24,9 +27,12 @@ blueprint = Blueprint('api', __name__, url_prefix='/api')
 api = Api(blueprint, doc='/documentation', title='Todos API', version='1.0', description='An API to manage lockdown activities', authorizations=authorizations, security='apikey')
 
 
-# api.add_namespace(register_user)
-# api.add_namespace(login_user)
-# api.add_namespace(change_password)
+api.add_namespace(manage)
+api.add_namespace(signup)
+api.add_namespace(login)
+api.add_namespace(logout)
+api.add_namespace(password)
+api.add_namespace(update)
 
 
 @jwt.user_claims_loader
