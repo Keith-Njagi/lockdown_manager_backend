@@ -9,21 +9,14 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(50), unique=True, nullable=False)
     full_name = db.Column(db.String(25), nullable=False)
-    username = db.Column(db.String(25),  unique=True, nullable=False)
+    phone = db.Column(db.Integer,  unique=True, nullable=False)
+    id_no = db.Column(db.Integer,  unique=True, nullable=False)
     password = db.Column(db.String(80), nullable=False)
 
     is_suspended = db.Column(db.Integer, default=0)
 
     created = db.Column(db.DateTime, default=datetime.utcnow(), nullable=False)
     updated = db.Column(db.DateTime, onupdate=datetime.utcnow(), nullable=True)
-    #event_oranisers = db.relationship("EventOrganiser", lazy="dynamic")
-
-    # def __init__(self, email, full_name, username, password, suspended):
-    #     self.email = email
-    #     self.full_name = full_name
-    #     self.username = username
-    #     self.password = password
-    #     self.suspended = suspended
 
 
     def insert_record(self):
