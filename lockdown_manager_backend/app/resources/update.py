@@ -18,6 +18,7 @@ user_model = api.model('UpdateUser', {
     'email': fields.String(required=True, description='Email'),
     'id_no': fields.Integer(required=True, description='ID Number'),
     'full_name': fields.String(required=True, description='Full Name'),
+    'country_code': fields.Integer(required=True, description='Country Code'),
     'phone': fields.Integer(required=True, description='Phone')
 })
 
@@ -51,16 +52,17 @@ class UpdateUser(Resource):
                 abort(400, 'Falied... A user with this email already exists')
 
         id_no = data['id_no']
-        db_user = Userfetch_by_id_no(id_no)
+        db_user = User.fetch_by_id_no(id_no)
         user_to_check = user_schema.dump(db_user)
         if len(user_to_check) > 0:
             if id_no == user_to_check['email'] and id != user_to_check['id']:
                 abort(400, 'Falied... A user with this email already exists')
 
-        full_name = data['full_name']
+        full_name = data['full_name'].lower()
+        country_code = data['country_code']
         phone = data['phone']
 
-        User.update_user(id=id, email=email, id_no=id_no, full_name=full_name, phone=phone)
+        User.update_user(id=id, email=email, id_no=id_no, full_name=full_name,country_code=country_code, phone=phone)
 
         this_user = User.fetch_by_id_no(id_no)
         current_user = user_schema.dump(this_user)
