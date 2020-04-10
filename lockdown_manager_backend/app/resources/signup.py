@@ -17,6 +17,7 @@ user_model = api.model('SignUp', {
     'email': fields.String(required=True, description='Email'),
     'id_no': fields.Integer(required=True, description='id_no'),
     'full_name': fields.String(required=True, description='Full Name'),
+    'country_code': fields.Integer(required=True, description='Country Code'),
     'phone': fields.Integer(required=True, description='phone'),
     'password': fields.String(required=True, description='Password')
 })
@@ -45,7 +46,7 @@ class Register(Resource):
         full_name = data['full_name'].lower()
         hashed_password = generate_password_hash(data['password'], method='sha256')
 
-        new_user = User(email=email, id_no=id_no, full_name=full_name, phone=data['phone'], password=hashed_password)
+        new_user = User(email=email, id_no=id_no, full_name=full_name,country_code=data['country_code'], phone=data['phone'], password=hashed_password)
         new_user.insert_record()
 
         user = user_schema.dump(data)

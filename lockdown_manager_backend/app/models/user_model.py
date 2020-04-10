@@ -10,7 +10,8 @@ class User(db.Model):
     email = db.Column(db.String(50), unique=True, nullable=False)
     id_no = db.Column(db.Integer,  unique=True, nullable=False)
     full_name = db.Column(db.String(30), nullable=False)
-    phone = db.Column(db.Integer,  unique=False, nullable=False)
+    country_code =  db.Column(db.Integer,  unique=False, nullable=False)
+    phone =  db.Column(db.Integer,  unique=False, nullable=False)
     password = db.Column(db.String(80), nullable=False)
     # Upon suspension, this value shall be changed to 1 and upon restoration shall change to 2
     is_suspended = db.Column(db.Integer, default=0) 
@@ -65,14 +66,18 @@ class User(db.Model):
         return True
 
     @classmethod  
-    def update_user(cls, id, email=None, full_name=None, username=None):
+    def update_user(cls, id, email=None, id_no=None, full_name=None, country_code=None, phone=None):
         record = cls.fetch_by_id(id)
         if email:
             record.email = email
+        if id_no:
+            record.id_no = id_no
         if full_name:
             record.full_name = full_name
-        if username:
-            record.username = username
+        if country_code:
+            record.country_code = country_code
+        if phone:
+            record.phone = phone
         db.session.commit()
         return True
 
@@ -94,7 +99,7 @@ class User(db.Model):
 
 class UserSchema(ma.ModelSchema):
     class Meta:
-        fields = ('id','email','full_name', 'username', 'is_suspended', 'created', 'updated')
+        fields = ('id','email', 'id_no','full_name', 'country_code', 'phone', 'is_suspended', 'created', 'updated')
         #model = User
     """     
     email = fields.Email(required=True, error_messages={'required': {'message': 'Please enter a valid email address', 'code': 400}})

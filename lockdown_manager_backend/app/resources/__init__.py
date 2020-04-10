@@ -24,7 +24,7 @@ authorizations = {
 }
 
 blueprint = Blueprint('api', __name__, url_prefix='/api')
-api = Api(blueprint, doc='/documentation', title='Todos API', version='1.0', description='An API to manage lockdown activities', authorizations=authorizations, security='apikey')
+api = Api(blueprint, doc='/documentation', title='Lockdown manager API', version='1.0', description='An API to manage lockdown activities', authorizations=authorizations, security='apikey')
 
 
 api.add_namespace(manage)

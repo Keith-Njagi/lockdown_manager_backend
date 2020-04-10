@@ -60,6 +60,7 @@ class SendResetLink(Resource):
         password_reset = PasswordReset()
         reset_code =password_reset.reset_code
         reset_token = password_reset.reset_token
+        
         print(reset_token)
 
         user_id = db_user.id
@@ -102,8 +103,8 @@ class CheckTokenValidity(Resource):
         if not reset_code_record:
             abort(400, 'Rejected! This reset token does not exist')
 
-        set_to_expire = reset_code_record.created + timedelta(hours=1)
-        current_time = datetime.now()
+        set_to_expire = reset_code_record.created + timedelta(minutes=30)
+        current_time = datetime.utcnow()
         if set_to_expire <= current_time:
             user_id = reset_code_record.user_id
             is_expired = True
