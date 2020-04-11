@@ -60,8 +60,6 @@ class SendResetLink(Resource):
         password_reset = PasswordReset()
         reset_code =password_reset.reset_code
         reset_token = password_reset.reset_token
-        
-        print(reset_token)
 
         user_id = db_user.id
         password_reset_record = ChangePasswordToken(user_id=user_id, email=email, reset_code=reset_code)
