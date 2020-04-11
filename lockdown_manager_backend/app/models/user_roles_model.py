@@ -36,6 +36,14 @@ class UserRole(db.Model):
     def fetch_by_user_id(cls, user_id):
         return cls.query.filter_by(user_id=user_id).first()
 
+    @classmethod  
+    def update_role(cls, id, role=None):
+        record = cls.fetch_by_id(id)
+        if role:
+            record.role = role
+        db.session.commit()
+        return True
+
 class UserRoleSchema(ma.ModelSchema):
     class Meta:
         model = UserRole

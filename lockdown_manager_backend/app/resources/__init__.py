@@ -9,6 +9,7 @@ from .logout import api as logout
 from .manage import api as manage
 from .password_manager import api as password, mail
 from .update import api as update
+from .manage_roles import api as roles
 
 
 jwt = JWTManager()
@@ -33,6 +34,7 @@ api.add_namespace(login)
 api.add_namespace(logout)
 api.add_namespace(password)
 api.add_namespace(update)
+api.add_namespace(roles)
 
 
 @jwt.user_claims_loader

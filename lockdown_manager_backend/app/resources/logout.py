@@ -23,6 +23,7 @@ class Logout(Resource):
         '''Log out user'''
         # jti is "JWT ID", a unique identifier for a JWT.
         jti = get_raw_jwt()["jti"]
-        user_id = get_jwt_identity()
+        user = get_jwt_identity()
+        user_id = user['id']
         BLACKLIST.add(jti)
         return {"message": f"User <id={user_id}> successfully logged out."}, 200
