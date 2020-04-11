@@ -11,7 +11,11 @@ class UserRole(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     user = db.relationship('User', backref=db.backref("user_roles", single_parent=True, lazy=True))
-    is_admin = db.Column(db.Boolean, default=False, nullable=False)
+    # 1 = Owner
+    # 2 = Admin
+    # 3 = Observer
+    # 4 = Normal user
+    role = db.Column(db.Integer, default=3, nullable=False)
     created = db.Column(db.DateTime, default=datetime.utcnow(), nullable=False)
     updated = db.Column(db.DateTime, onupdate=datetime.utcnow(), nullable=True)
 

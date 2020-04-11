@@ -53,6 +53,11 @@ class Register(Resource):
 
         this_user = User.fetch_by_email(email)
 
+        if this_user.id == 1:
+            user_id = this_user.id
+            role = 1
+            new_user_role = 
+
         expiry_time = timedelta(minutes=30)
         access_token = create_access_token(identity=this_user.id, expires_delta=expiry_time)
         refresh_token = create_refresh_token(this_user.id)        
