@@ -7,12 +7,14 @@ from flask_jwt_extended import create_access_token, create_refresh_token, jwt_re
 from marshmallow import ValidationError
 
 from models.user_model import User, UserSchema
-
+from models.user_roles_model import UserRole, UserRoleSchema
+from user_functions.user_role_manager import UserPrivilege
 
 api = Namespace('login', description='Log in')
 
 user_schema = UserSchema()
 users_schema = UserSchema(many=True)
+user_role_schema = UserRoleSchema()
 
 my_user_model = api.model('Login', {
     'id_no': fields.Integer(required=True, description='ID Number'),
@@ -37,9 +39,16 @@ class Login(Resource):
         if this_user:
             if check_password_hash(this_user.password, data['password']):
                 current_user = user_schema.dump(this_user)
+                user_id = this_user.id
+
+                user_role = UserRole.fetch_by_user_id(user_id)
+                UserPrivilege.get_privileges(user_id = user_id, role= user_role.role)
+
+                privileges = UserPrivilege.privileges
                 expiry_time = timedelta(minutes=30)
-                access_token = create_access_token(identity=this_user.id, expires_delta=expiry_time)
-                refresh_token = create_refresh_token(this_user.id)
+                my_identity = {'id':this_user.id, 'privileges':privileges}
+                access_token = create_access_token(identity=my_identity, expires_delta=expiry_time)
+                refresh_token = create_refresh_token(my_identity)
                 return {'message': 'User logged in', 'user': current_user, 'access_token': access_token, "refresh_token": refresh_token}, 200
         if not this_user or not check_password_hash(user.password, data['password']):
             return {'message': 'Could not log in, please check your credentials'}, 400

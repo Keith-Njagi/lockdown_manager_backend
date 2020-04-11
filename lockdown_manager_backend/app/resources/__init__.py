@@ -38,7 +38,7 @@ api.add_namespace(update)
 @jwt.user_claims_loader
 # Remember identity is what we define when creating the access token
 def add_claims_to_jwt(identity):
-    if identity == 1:  # instead of hard-coding, we should read from a file or database to get a list of admins instead
+    if identity['privileges'] == 'Owner' or identity['privileges'] == 'Admin':  # instead of hard-coding, we should read from a file or database to get a list of admins instead
         return {"is_admin": True}
     return {"is_admin": False}
 

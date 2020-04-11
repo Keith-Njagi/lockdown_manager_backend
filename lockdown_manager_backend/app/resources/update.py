@@ -8,11 +8,14 @@ from marshmallow import ValidationError
 
 
 from models.user_model import User, UserSchema
+from models.user_roles_model import UserRole, UserRoleSchema
+from user_functions.user_role_manager import UserPrivilege
 
 api = Namespace('update', description='Update User')
 
 user_schema = UserSchema()
 users_schema = UserSchema(many=True)
+user_role_schema = UserRoleSchema()
 
 user_model = api.model('UpdateUser', {
     'email': fields.String(required=True, description='Email'),
