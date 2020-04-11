@@ -43,7 +43,7 @@ class SuspendUser(Resource):
 
         claims = get_jwt_claims()
         authorised_user = get_jwt_identity()
-        if claims['is_admin'] or id == authorised_user['id']:
+        if claims['is_admin'] or id == authorised_user['id']: 
             is_suspended = 1
             try:
                 User.suspend_user(id, is_suspended=is_suspended)
@@ -68,7 +68,7 @@ class RestoreUser(Resource):
 
         claims = get_jwt_claims()
         authorised_user = get_jwt_identity()
-        if claims['is_admin'] or id == authorised_user['id']:
+        if claims['is_admin'] or id == authorised_user['id']: 
             is_suspended = 2
             try:
                 User.restore_user(id=id, is_suspended=is_suspended)

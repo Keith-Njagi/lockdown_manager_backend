@@ -39,7 +39,7 @@ class UpdateUser(Resource):
             abort(400, 'User does not exist')
 
         authorised_user = get_jwt_identity()
-        if id != authorised_user['id']:
+        if id != authorised_user['id']: 
             abort(400, 'You cannot modify this user! Please log in as this user to modify.')# 403
 
         data = api.payload
