@@ -43,7 +43,7 @@ class SuspendUser(Resource):
 
         claims = get_jwt_claims()
         authorised_user = get_jwt_identity()
-        if claims['is_admin'] or id == authorised_user['id']: 
+        if claims['is_admin'] or id == authorised_user['id']:
             is_suspended = 1
             try:
                 User.suspend_user(id, is_suspended=is_suspended)
@@ -68,7 +68,7 @@ class RestoreUser(Resource):
 
         claims = get_jwt_claims()
         authorised_user = get_jwt_identity()
-        if claims['is_admin'] or id == authorised_user['id']: 
+        if claims['is_admin'] or id == authorised_user['id']:
             is_suspended = 2
             try:
                 User.restore_user(id=id, is_suspended=is_suspended)
@@ -93,7 +93,7 @@ class DeleteUser(Resource):
 
         claims = get_jwt_claims()
         authorised_user = get_jwt_identity()
-        if not claims['is_admin'] or id != authorised_user['id']:  # 403
+        if not claims['is_admin'] or id != authorised_user['id']: # 403
             abort(400, 'You do not have the required permissions to delete this user!')
 
         User.delete_by_id(id)
