@@ -1,35 +1,35 @@
 import base64
-from datetime import timedelta, datetime
 import smtplib
+from datetime import timedelta, datetime
 from email.mime.text import MIMEText
 
+import uuid
+import requests
 from flask_restx import Namespace, Resource, fields
 from werkzeug.security import generate_password_hash
 from flask_jwt_extended import create_access_token, create_refresh_token
 from flask import abort
-import uuid
 from flask_mail import Message
 from flask import render_template
-import requests
 from flask_mail import Mail, Message
 
 
-#from . import mail
 from models.user_model import User, UserSchema
 from models.change_password_model import ChangePasswordToken, ChangePasswordTokenSchema
-from user_functions.password_reset import PasswordReset#generate_reset_token, decode_reset_token
+from models.user_roles_model import UserRole, UserRoleSchema
+from user_functions.password_reset import PasswordReset
+from user_functions.user_role_manager import UserPrivilege
 
 
 mail = Mail()
 
+api = Namespace('password', description='Change User Password')
 
 password_token_schema = ChangePasswordTokenSchema()
 password_tokens_schema = ChangePasswordTokenSchema(many=True)
 user_schema = UserSchema()
 users_schema = UserSchema(many=True)
-
-
-api = Namespace('password', description='Change User Password')
+user_role_schema = UserRoleSchema()
 
 reset_token_model = api.model('PasswordResetToken', {
     'email': fields.String(required=True, description='Email registered under one of the accounts')
@@ -64,6 +64,7 @@ class SendResetLink(Resource):
         user_id = db_user.id
         password_reset_record = ChangePasswordToken(user_id=user_id, email=email, reset_code=reset_code)
         password_reset_record.insert_record()
+        print(reset_token)
 
         # Write code to send link to email
         # Add a html to send along with the email containing a button that redirects to the password reset page
@@ -171,8 +172,16 @@ class ResetPassword(Resource):
         User.update_password(id=user_id, password=hashed_password)
         this_user = User.fetch_by_id(id=user_id)
         user = user_schema.dump(this_user)
+
+        user_id = this_user.id
+
+        user_role = UserRole.fetch_by_user_id(user_id)
+        UserPrivilege.get_privileges(user_id = user_id, role= user_role.role)
+
+        privileges = UserPrivilege.privileges
         expiry_time = timedelta(minutes=30)
-        access_token = create_access_token(identity=this_user.id, expires_delta=expiry_time)
-        refresh_token = create_refresh_token(this_user.id)
+        my_identity = {'id':this_user.id, 'privileges':privileges}
+        access_token = create_access_token(identity=my_identity, expires_delta=expiry_time)
+        refresh_token = create_refresh_token(my_identity)
         status = {'message': 'Successfully changed Password', 'access token': access_token, 'refresh token': refresh_token, 'user': user}
         return status, 200

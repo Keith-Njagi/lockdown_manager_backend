@@ -8,10 +8,13 @@ from marshmallow import ValidationError
 
 
 from models.user_model import User, UserSchema
+from models.user_roles_model import UserRole, UserRoleSchema
+from user_functions.user_role_manager import UserPrivilege
 
 api = Namespace('signup', description='Sign up')
 
 user_schema = UserSchema()
+user_role_schema = UserRoleSchema()
 
 user_model = api.model('SignUp', {
     'email': fields.String(required=True, description='Email'),
@@ -53,12 +56,15 @@ class Register(Resource):
 
         this_user = User.fetch_by_email(email)
 
-        if this_user.id == 1:
-            user_id = this_user.id
-            role = 1
-            new_user_role = 
+        UserPrivilege.generate_user_role(user_id = this_user.id)
+        user_id = UserPrivilege.user_id
+        role = UserPrivilege.role
+        new_user_role = UserRole(user_id=user_id, role=role)
+        new_user_role.insert_record()
 
+        privileges =UserPrivilege.privileges
         expiry_time = timedelta(minutes=30)
-        access_token = create_access_token(identity=this_user.id, expires_delta=expiry_time)
-        refresh_token = create_refresh_token(this_user.id)        
+        my_identity = {'id':this_user.id, 'privileges':privileges}
+        access_token = create_access_token(identity=my_identity, expires_delta=expiry_time)
+        refresh_token = create_refresh_token(my_identity)        
         return {'message': 'Success', 'access token': access_token, "refresh_token": refresh_token, 'user': user}, 201
