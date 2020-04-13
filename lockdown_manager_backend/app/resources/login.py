@@ -35,7 +35,6 @@ class Login(Resource):
 
         id_no = data['id_no']
         this_user = User.fetch_by_id_no(id_no)
-        print(this_user)
         if this_user:
             if check_password_hash(this_user.password, data['password']):
                 current_user = user_schema.dump(this_user)
@@ -50,7 +49,7 @@ class Login(Resource):
                 access_token = create_access_token(identity=my_identity, expires_delta=expiry_time)
                 refresh_token = create_refresh_token(my_identity)
                 return {'message': 'User logged in', 'user': current_user, 'access_token': access_token, "refresh_token": refresh_token}, 200
-        if not this_user or not check_password_hash(user.password, data['password']):
+        if not this_user or not check_password_hash(this_user.password, data['password']):
             return {'message': 'Could not log in, please check your credentials'}, 400
 
 # @api.route('/mail')
