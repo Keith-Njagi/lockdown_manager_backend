@@ -33,6 +33,7 @@ class UserRoleList(Resource):
         return {'status':'Matches retrieved', 'roles':roles}, 200
 
 @api.route('/<int:id>')
+@api.param('id', 'The role identifier')
 class UserRoleList(Resource):
     @api.doc('Update a user role')
     @api.expect(user_role_model)
