@@ -14,7 +14,9 @@ permits_schema = OutdoorPermitSchema(many=True)
 
 permits_model = api.model('OutdoorPermit', {
     'current_location': fields.String(required=True, description='Current Location'),
-    'destination': fields.String(required=True, description='Destination')
+    'destination': fields.String(required=True, description='Destination'),
+    'time_from': fields.DateTime(required=True, description='Time From'),
+    'time_to': fields.DateTime(required=True, description='Time To')
 })
 
 @api.route('')
@@ -58,8 +60,8 @@ class PermitList(Resource):
         user_id = id
         current_location = data['current_location']
         destination = data['destination']
-        time_from =  datetime.utcnow() # data['time_from'] #
-        time_to =  datetime.utcnow()+timedelta(hours=1) # data['time_to'] #
+        time_from = data['time_from'] # datetime.utcnow()
+        time_to = data['time_to'] # datetime.utcnow()+timedelta(hours=1)
 
         try:
             new_permit = OutdoorPermit(user_id=user_id, current_location=current_location, destination=destination, time_from=time_from, time_to=time_to)
